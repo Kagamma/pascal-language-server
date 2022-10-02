@@ -555,18 +555,18 @@ begin
     // Lazarus config files or from the initializationOptions passed by the
     // Initialize RPC call (or environment variables).
     // I'm just leaving this here as a reminder of what these variables should
-    // approximately look like.
+    // approximately look like.}
     with Options do
     begin
-      ProjectDir      := Directory;
-      TargetOS        := 'Darwin';
-      TargetProcessor := 'x86_64';
-      FPCSrcDir       := '/usr/local/share/fpcsrc/3.2.0';
-      LazarusSrcDir   := '/Applications/Lazarus';
-      FPCPath         := '/usr/local/bin/fpc';
+      //ProjectDir      := Directory;
+      //TargetOS        := 'Darwin';
+      //TargetProcessor := 'x86_64';
+      FPCSrcDir       := 'd:\sdks\fpc\fpcsrc-lsp\source';
+      LazarusSrcDir   := 'd:\sdks\fpc\lazarus';
+      FPCPath         := 'd:\sdks\fpc\fpc';
       TestPascalFile  := '/tmp/testfile1.pas';
     end;
-    }     
+
 
     // Parse initializationOptions
     Reader := Request.Reader;
@@ -667,7 +667,13 @@ begin
         Writer.Key('completionProvider');
         Writer.Dict;
           Writer.Key('triggerCharacters');
-          Writer.Null;
+          Writer.List;
+            Writer.Str('.');    
+            Writer.Str('^');
+            Writer.Str(',');
+            Writer.Str('(');
+            Writer.Str(')');
+          Writer.ListEnd;
 
           Writer.Key('allCommitCharacters');
           Writer.Null;

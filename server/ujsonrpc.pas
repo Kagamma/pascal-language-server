@@ -315,6 +315,7 @@ const
 begin
   Response.Finalize;
 
+  {$ifndef WINDOWS}
   WriteString(Format(
     'Content-Type: %s'#13#10'Content-Length:%d'#13#10#13#10,
     [ContentType, Response.FBuffer.Size]
@@ -326,6 +327,13 @@ begin
 
   if FOutput is THandleStream then
     FileFlush(THandleStream(FOutput).Handle);
+  {$else}
+  WriteLn('Content-Type: ', ContentType);
+  WriteLn('Content-Length: ', Response.FBuffer.Size);
+  Writeln;
+  Writeln(Response.AsString);
+  Flush(Output);
+  {$endif}
 
   DebugLog('< Response: '#10'%s', [Copy(Response.AsString, 1, 2000)]);
 end;

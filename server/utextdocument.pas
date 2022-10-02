@@ -75,18 +75,36 @@ begin
   Result := HaveUri and HaveContent;
 end;
 
+function ProcessURI(Uri: String): String;
+begin
+  Result := Uri;
+  {$ifdef WINDOWS}
+  if (Result <> '') and (Result[1] = '/') then
+  begin
+    Delete(Result, 1, 1);
+  end;
+  {$endif}
+end;
+
 procedure TextDocument_DidOpen(Rpc: TRpcPeer; Request: TRpcRequest);
 var
   Code:    TCodeBuffer;
   UriStr:  string;
   Uri:     TURI;
+  Path: String;
   Content: string;
 begin
   if ParseChangeOrOpen(Request.Reader, UriStr, Content, false) then
   begin
-    Uri         := ParseURI(UriStr);
-    Code        := CodeToolBoss.LoadFile(URI.Path + URI.Document, false, false);
-    Code.Source := Content;
+    Uri := ParseURI(UriStr);
+    Uri.Path := ProcessURI(Uri.Path);
+    try
+      Code        := CodeToolBoss.LoadFile(URI.Path + URI.Document, false, false);
+      Code.Source := Content;
+    except
+      on E: Exception do
+        DebugLog('TextDocument_DidOpen: ' + E.Message + #10);
+    end;
   end;
 end;
 
@@ -99,9 +117,15 @@ var
 begin
   if ParseChangeOrOpen(Request.Reader, UriStr, Content, true) then
   begin
-    Uri         := ParseURI(UriStr);
-    Code        := CodeToolBoss.FindFile(URI.Path + URI.Document);
-    Code.Source := Content;
+    Uri := ParseURI(UriStr);
+    Uri.Path := ProcessURI(Uri.Path);
+    try
+      Code        := CodeToolBoss.FindFile(URI.Path + URI.Document);
+      Code.Source := Content;
+    except
+      on E: Exception do
+        DebugLog('TextDocument_DidChange: ' + E.Message + #10);
+    end;
   end;
 end;
 
@@ -279,6 +303,7 @@ begin
     end;
 
   Result.Uri := ParseUri(UriStr);
+  Result.Uri.Path := ProcessURI(Result.Uri.Path);
 end;
 
 // Identifier completion

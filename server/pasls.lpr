@@ -150,6 +150,10 @@ begin
 end;
 
 begin
+  {$ifdef WINDOWS}
+  SetTextLineEnding(Input, #13#10);
+  SetTextLineEnding(Output, #13#10);
+  {$endif}
   InputStream    := nil;
   OutputStream   := nil;
   DebugStream    := nil;
