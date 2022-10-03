@@ -99,7 +99,7 @@ const
 
 implementation
 
-uses 
+uses
   udebug;
 
 procedure WriteRpcId(Writer: TJsonWriter; const Id: TRPcId);
@@ -154,7 +154,7 @@ begin
   Writer.Dict;
     Writer.Key('code');
     Writer.Number(Code);
-  
+
     Writer.Key('message');
     Writer.Str(Msg);
   Writer.DictEnd;
@@ -231,7 +231,7 @@ begin
       raise EParserError.Create('Invalid request body.');
 
     Buffer := TBytesStream.Create();
-    Buffer.SetSize(Len);  
+    Buffer.SetSize(Len);
     FInput.BlockRead(PByte(Buffer.Memory)^, Len);
 
     // 1st pass: Extract meta data
@@ -261,13 +261,13 @@ begin
 
     if (Version <> '2.0') then
       raise ERpcError.Create(
-        jsrpcInvalidRequest, 
+        jsrpcInvalidRequest,
         'No or invalid jsonrpc version specified. Must be 2.0.'
       );
 
     if (Method = '') then
       raise ERpcError.Create(
-        jsrpcInvalidRequest, 
+        jsrpcInvalidRequest,
         'No method specified.'
       );
 
@@ -315,13 +315,16 @@ const
 begin
   Response.Finalize;
 
+  { Emacs's lsp-bridge cannot read data from stdin, even though vscode can.
+    This happen on Windows and I don't know the reason for it.
+    We avoid it by using built-in Write/Writeln procedures instead. }
   {$ifndef WINDOWS}
   WriteString(Format(
     'Content-Type: %s'#13#10'Content-Length:%d'#13#10#13#10,
     [ContentType, Response.FBuffer.Size]
   ));
   FOutput.WriteBuffer(
-    PByte(Response.FBuffer.Memory)^, 
+    PByte(Response.FBuffer.Memory)^,
     Response.FBuffer.Size
   );
 
@@ -353,4 +356,3 @@ begin
 end;
 
 end.
-
