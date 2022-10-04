@@ -43,29 +43,37 @@ end;
 
 procedure Dispatch(Rpc: TRpcPeer; Request: TRpcRequest);
 begin
-  if Request.Method = 'initialize' then
-    Initialize(Rpc, Request)
-  else if Request.Method = 'initialized' then
-  else if Request.Method = 'shutdown' then
-  else if Request.Method = 'textDocument/didOpen' then
-    TextDocument_DidOpen(Rpc, Request)
-  else if Request.Method = 'textDocument/didChange' then
-    TextDocument_DidChange(Rpc, Request)
-  else if Request.Method = 'textDocument/didClose' then
-  else if Request.Method = 'textDocument/completion' then
-    TextDocument_Completion(Rpc, Request)
-  else if Request.Method = 'textDocument/signatureHelp' then
-    TextDocument_SignatureHelp(Rpc, Request)
-  else if Request.Method = 'textDocument/declaration' then
-    TextDocument_Declaration(Rpc, Request)
-  else if Request.Method = 'textDocument/definition' then
-    TextDocument_Definition(Rpc, Request)
-  else if Request.Method = 'exit' then
-  else if Request.Method = '$/cancelRequest' then
-  else
-    raise ERpcError.CreateFmt(
-      jsrpcMethodNotFound, 'Method not found: %s', [Request.Method]
-    );
+  case Request.Method of
+    'initialize':
+      Initialize(Rpc, Request);
+    'initialized',
+    'shutdown',
+    'textDocument/didOpen':
+      TextDocument_DidOpen(Rpc, Request);
+    'textDocument/didChange':
+      TextDocument_DidChange(Rpc, Request);
+    'textDocument/didClose',
+    'textDocument/completion':
+      TextDocument_Completion(Rpc, Request);
+    'textDocument/signatureHelp':
+      TextDocument_SignatureHelp(Rpc, Request);
+    'textDocument/declaration':
+      TextDocument_Declaration(Rpc, Request);
+    'textDocument/definition':
+      TextDocument_Definition(Rpc, Request);
+    'exit':
+      begin
+        // Do nothing
+      end;
+    '$/cancelRequest':
+      begin
+        // Do nothing
+      end;
+    else
+      raise ERpcError.CreateFmt(
+        jsrpcMethodNotFound, 'Method not found: %s', [Request.Method]
+      );
+  end;
 end;
 
 procedure Main(Rpc: TRpcPeer);
