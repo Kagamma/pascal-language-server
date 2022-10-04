@@ -92,8 +92,8 @@ end;
 //
 // Consider the following scenario:
 //
-//   A requires: 
-//     - B (found) 
+//   A requires:
+//     - B (found)
 //     - C (NOT found)
 //   B requires:
 //     - C (found)
@@ -247,7 +247,7 @@ begin
   if Pkg.Configured then
     exit;
   Pkg.Configured := True;
- 
+
   // Configure search path for package's (or project's) main source directory.
   ConfigureSearchPath(Pkg.Dir);
 
@@ -271,11 +271,11 @@ var
   DirName: string;
 begin
   Dirname := lowercase(ExtractFileName(Dir));
-  Result := 
-    (DirName = '.git')                              or 
+  Result :=
+    (DirName = '.git')                              or
     ((Length(DirName) >= 1) and (DirName[1] = '.')) or
-    (DirName = 'backup')                            or 
-    (DirName = 'lib')                               or 
+    (DirName = 'backup')                            or
+    (DirName = 'lib')                               or
     (Pos('.dsym', DirName) > 0)                     or
     (Pos('.app', DirName) > 0);
 end;
@@ -285,7 +285,7 @@ procedure LoadAllPackagesUnderPath(const Dir: string);
 var
   Packages,
   SubDirectories:    TStringList;
-  i:                 integer;     
+  i:                 integer;
   Pkg:               TPackage;
 begin
   if IgnoreDirectory(Dir) then
@@ -440,13 +440,13 @@ var
   Doc:                TXMLDocument;
 
   Root,
-  EnvironmentOptions, 
-  FPCConfigs, 
+  EnvironmentOptions,
+  FPCConfigs,
   Item1:              TDomNode;
 
-  LazarusDirectory, 
-  FPCSourceDirectory, 
-  CompilerFilename, 
+  LazarusDirectory,
+  FPCSourceDirectory,
+  CompilerFilename,
   OS, CPU:            string;
 
   function LoadLazConfig(Path: string): Boolean;
@@ -668,7 +668,7 @@ begin
         Writer.Dict;
           Writer.Key('triggerCharacters');
           Writer.List;
-            Writer.Str('.');    
+            Writer.Str('.');
             Writer.Str('^');
             Writer.Str(',');
             Writer.Str('(');
@@ -714,4 +714,3 @@ begin
 end;
 
 end.
-

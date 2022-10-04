@@ -79,7 +79,7 @@ begin
       Request := Rpc.Receive;
 
       if Request = nil then
-      begin  
+      begin
         DebugLog('** End of stream, exiting **');
         exit;
       end;
@@ -199,7 +199,7 @@ begin
       end;
       Tee          := TTeeStream.Create(InputStream, Transcript);
       RpcPeer      := TRpcPeer.Create(Tee, OutputStream);
-    end 
+    end
     else if LoadReplay then
     begin
       InputStream  := TFileStream.Create(TranscriptPath, fmOpenRead);

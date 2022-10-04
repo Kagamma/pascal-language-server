@@ -127,7 +127,7 @@ var
     i: integer;
   begin
     for i := FBufOffset to FBufSize - 1 do
-      if (Chr(FBuf[i]) = #13) and 
+      if (Chr(FBuf[i]) = #13) and
          ((i = FBufSize - 1) or (Chr(FBuf[i+1]) = #10)) then
       begin
         Result := i;
@@ -199,4 +199,3 @@ begin
 end;
 
 end.
-

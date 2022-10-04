@@ -142,7 +142,7 @@ type
     Desc:       String;
   end;
 
-  TCompletionCallback = 
+  TCompletionCallback =
     procedure (const Rec: TCompletionRec; Writer: TJsonWriter);
 
 procedure GetCompletionRecords(
@@ -172,9 +172,9 @@ begin
 
   if not CodeToolBoss.GatherIdentifiers(Code, X, Y) then
     raise ERpcError.Create(
-      jsrpcRequestFailed, 
+      jsrpcRequestFailed,
       Format('Line %d: %s', [
-        CodeToolBoss.ErrorLine, 
+        CodeToolBoss.ErrorLine,
         CodeToolBoss.ErrorMessage
       ])
     );
@@ -201,9 +201,9 @@ begin
       begin
         ResultType :=
           Identifier.Tool.ExtractProcHead(
-            identifier.Node, 
+            identifier.Node,
             [
-              phpWithoutName, phpWithoutParamList, phpWithoutSemicolon, 
+              phpWithoutName, phpWithoutParamList, phpWithoutSemicolon,
               phpWithResultType, phpWithoutBrackets, phpWithoutGenericParams,
               phpWithoutParamTypes
             ]
@@ -244,7 +244,7 @@ begin
         AppendString(Rec.Text, ': ');
         Rec.ResultType := AppendString(Rec.Text, ResultType);
       end;
-      
+
       Rec.Desc := Identifier.Node.DescAsString;
 
       Callback(Rec, Writer);
@@ -370,7 +370,7 @@ begin
         Writer.Key('items');
         Writer.List;
           GetCompletionRecords(
-            Code, Req.X + 1, Req.Y + 1, Prefix, false, 
+            Code, Req.X + 1, Req.Y + 1, Prefix, false,
             @CompletionCallback, Writer
           );
         Writer.ListEnd;
@@ -470,7 +470,7 @@ var
     // But we actually need a position *inside* the procedure identifier.
     // Note that there may be whitespace, even newlines, between the first
     // parenthesis and the procedure.
-    while (ProcStart > 1) and 
+    while (ProcStart > 1) and
           (Code.Source[ProcStart] in ['(', ' ', #13, #10, #9]) do
       Dec(ProcStart);
 
@@ -569,8 +569,8 @@ var
 
   // JumpToMethod
   FoundMethod:       Boolean;
-  NewTopLine, 
-  BlockTopLine, 
+  NewTopLine,
+  BlockTopLine,
   BlockBottomLine:   Integer;
   RevertableJump:    Boolean;
 
@@ -604,16 +604,16 @@ begin
     CurPos.Y    := Req.Y + 1;
 
     DebugLog(
-      'Find declaration/definition: %d, %d "%s"', 
+      'Find declaration/definition: %d, %d "%s"',
       [Req.X, Req.Y, GetPrefix(Code, Req.X, Req.Y)]
     );
 
     try
       // Find declaration
-      FoundDeclaration := 
+      FoundDeclaration :=
         (Target in [jmpDeclaration, jmpDefinition]) and
         CodeToolBoss.CurCodeTool.FindDeclaration(
-          CurPos, DefaultFindSmartHintFlags+[fsfSearchSourceName], 
+          CurPos, DefaultFindSmartHintFlags+[fsfSearchSourceName],
           ExprType, NewPos, NewTopLine
 
         );
@@ -635,7 +635,7 @@ begin
       end;
 
       // Try to jump to method implementation
-      FoundMethod := 
+      FoundMethod :=
         FoundDeclaration and IsProc and (Target = jmpDefinition) and
         CodeToolBoss.JumpToMethod(
           CurPos.Code, CurPos.X, CurPos.Y, NewPos.Code, NewPos.X, NewPos.Y,
@@ -651,7 +651,7 @@ begin
       on E: ECodeToolError do ; // Swallow
     end;
 
-    Response := TRpcResponse.Create(Request.Id);  
+    Response := TRpcResponse.Create(Request.Id);
     Writer   := Response.Writer;
 
     if Success then
@@ -704,4 +704,3 @@ begin
 end;
 
 end.
-

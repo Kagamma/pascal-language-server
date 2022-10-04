@@ -195,11 +195,11 @@ var
       Exit;
 
     Package.Paths.IncludePath := MergePaths([
-      Package.Paths.IncludePath, 
+      Package.Paths.IncludePath,
       GetAdditionalPaths(SearchPaths, 'IncludeFiles')
     ]);
     Package.Paths.UnitPath    := MergePaths([
-      Package.Paths.UnitPath, 
+      Package.Paths.UnitPath,
       GetAdditionalPaths(SearchPaths, 'OtherUnitFiles')
     ]);
     Package.Paths.SrcPath     := GetAdditionalPaths(SearchPaths, 'SrcPath');
@@ -207,7 +207,7 @@ var
 
   procedure LoadDeps;
   var
-    Deps, Item, Name, 
+    Deps, Item, Name,
     Path, Prefer:      TDomNode;
     Dep:               TDependency;
     i, DepCount:       Integer;
@@ -235,7 +235,7 @@ var
       if not Assigned(Name) then
         continue;
 
-      Dep.Name    := Name.NodeValue; 
+      Dep.Name    := Name.NodeValue;
       Dep.Prefer  := False;
       Dep.Package := nil;
       Dep.Path    := '';
@@ -336,4 +336,3 @@ PkgCache      := TFPObjectHashTable.Create;
 
 
 end.
-
