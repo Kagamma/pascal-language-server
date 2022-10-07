@@ -1,6 +1,7 @@
 // Pascal Language Server
 // Copyright 2020 Arjan Adriaanse
 //           2021 Philip Zander
+//           2022 kagamma
 
 // This file is part of Pascal Language Server.
 
@@ -33,13 +34,14 @@ procedure TextDocument_SignatureHelp(Rpc: TRpcPeer; Request: TRpcRequest);
 procedure TextDocument_Completion(Rpc: TRpcPeer; Request: TRpcRequest);
 procedure TextDocument_Declaration(Rpc: TRpcPeer; Request: TRpcRequest);
 procedure TextDocument_Definition(Rpc: TRpcPeer; Request: TRpcRequest);
+procedure TextDocument_DidChangeConfiguration(Rpc: TRpcPeer; Request: TRpcRequest);
 
 implementation
 
 uses
   Classes, SysUtils, URIParser, CodeToolManager, CodeCache, IdentCompletionTool,
   BasicCodeTools, PascalParserTool, CodeTree, FindDeclarationTool,
-  CustomCodeTool, udebug;
+  CustomCodeTool, udebug, uinitialize;
 
 function ParseChangeOrOpen(
   Reader: TJsonReader; out Uri: string; out Content: string; IsChange: Boolean
@@ -701,6 +703,34 @@ end;
 procedure TextDocument_Definition(Rpc: TRpcPeer; Request: TRpcRequest);
 begin
   TextDocument_JumpTo(Rpc, Request, jmpDefinition);
+end;
+
+procedure TextDocument_DidChangeConfiguration(Rpc: TRpcPeer; Request: TRpcRequest);
+var
+  Reader: TJsonReader;
+  Key, Content: String;
+begin
+  Reader := Request.Reader;
+  if Reader.Dict then
+  begin
+    while (Reader.Advance <> jsDictEnd) and Reader.Key(Key) do
+    begin
+      DebugLog('Key: ' + Key + #10);
+      if (Key = 'settings') and (Reader.Dict) then
+      begin
+        while (Reader.Advance <> jsDictEnd) and Reader.Key(Key) do
+        begin
+          DebugLog('Key: ' + Key + #10);
+          if (Key = 'paths') and (Reader.List) then
+            while (Reader.Advance <> jsListEnd) and Reader.Str(Content) do
+            begin
+              DebugLog('Path: ' + Content + #10);
+              ConfigurePaths(Content);
+            end;
+        end;
+      end;
+    end;
+  end;
 end;
 
 end.

@@ -1,6 +1,7 @@
 // Pascal Language Server
 // Copyright 2020 Arjan Adriaanse
 //           2021 Philip Zander
+//           2022 kagamma
 
 // This file is part of Pascal Language Server.
 
@@ -61,6 +62,8 @@ begin
       TextDocument_Declaration(Rpc, Request);
     'textDocument/definition':
       TextDocument_Definition(Rpc, Request);
+    'workspace/didChangeConfiguration':
+      TextDocument_DidChangeConfiguration(Rpc, Request);
     'exit':
       begin
         // Do nothing

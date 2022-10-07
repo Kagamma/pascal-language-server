@@ -28,6 +28,7 @@ uses
   jsonstream, ujsonrpc;
 
 procedure Initialize(Rpc: TRpcPeer; Request: TRpcRequest);
+procedure ConfigurePaths(const Dir: string);
 
 implementation
 
