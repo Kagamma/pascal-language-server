@@ -1,3 +1,10 @@
 /backup/
 /lib/
 *.lps
+*.ppu
+*.o
+*.compiled
+*.dbg
+*.exe
+*.dll
+*.txt
